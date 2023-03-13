@@ -18,7 +18,7 @@ waitContainer () {
 waitContainers () {
   waitContainer solr
   waitContainer backend
-  waitContainer frontend
+  #waitContainer frontend
 }
 
 if [ "$1" == "build" ]; then

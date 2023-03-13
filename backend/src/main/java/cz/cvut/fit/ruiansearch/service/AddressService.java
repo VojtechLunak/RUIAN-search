@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.geo.Point;
 import org.springframework.data.solr.core.query.result.GroupResult;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AddressService {
@@ -26,5 +27,6 @@ public interface AddressService {
     GroupResult<Address> getDistrictSuggestions(String city, String district);
     GroupResult<Address> getStreetSuggestions(String city, String district, String street);
     GroupResult<Address> getHouseNumberSuggestions(String city, String district, String street, String houseNumber);
+    Page<Address> getSuggestions(String searchString);
     Page<Address> getNearbyAddresses(Point center, Double distance);
 }

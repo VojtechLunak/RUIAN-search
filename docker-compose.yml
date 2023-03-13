@@ -29,6 +29,8 @@ services:
     image: backend/spring-boot
     environment:
       RUIAN_SOLR_URL: http://solr:8983/solr      
+    ports:
+      - 8080:8080
     networks:
       - solr
       - proxy
@@ -38,21 +40,21 @@ services:
       test: wget --spider -q http://localhost:8080 || exit 1
       interval: 20s
       timeout: 10s
-  vue-app:
-    container_name: frontend
-    hostname: vue-app
-    build: ./frontend/
-    image: frontend/vue
-    ports:
-      - 8000:80
-    networks:
-      - proxy
-    depends_on: 
-      - spring-boot
-    healthcheck:
-      test: wget --spider -q http://localhost:80 || exit 1
-      interval: 20s
-      timeout: 10s
+#  vue-app:
+#    container_name: frontend
+#    hostname: vue-app
+#    build: ./frontend/
+#    image: frontend/vue
+#    ports:
+#      - 8000:80
+#    networks:
+#      - proxy
+#    depends_on:
+#      - spring-boot
+#    healthcheck:
+#      test: wget --spider -q http://localhost:80 || exit 1
+#      interval: 20s
+#      timeout: 10s
 volumes:
   data:
 networks:

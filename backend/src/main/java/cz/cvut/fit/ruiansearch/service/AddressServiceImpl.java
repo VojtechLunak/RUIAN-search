@@ -9,6 +9,7 @@ import org.springframework.data.solr.core.geo.Point;
 import org.springframework.data.solr.core.query.result.GroupResult;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,6 +77,11 @@ public class AddressServiceImpl implements AddressService {
             String street,
             String houseNumber) {
         return addressCustomRepository.getHouseNumberSuggestions(city, district, street, houseNumber);
+    }
+
+    @Override
+    public Page<Address> getSuggestions(String searchString) {
+        return addressCustomRepository.getSuggestions(searchString);
     }
 
     @Override

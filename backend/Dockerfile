@@ -1,16 +1,17 @@
-FROM openjdk:8-jdk-alpine AS build
-ARG RUIAN_SOLR_URL
-WORKDIR /workspace/app
+FROM maven:3-eclipse-temurin-11 as build
 
-RUN apk add --no-cache maven
-COPY pom.xml .
+WORKDIR /ruian-search
+
+COPY pom.xml pom.xml
+
+RUN mvn -B de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+
 COPY src src
-RUN mvn install
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+RUN mvn package -B -DskipTests=true
 
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-COPY --from=build /workspace/app/target/dependency/BOOT-INF/lib /app/lib
-COPY --from=build /workspace/app/target/dependency/META-INF /app/META-INF
-COPY --from=build /workspace/app/target/dependency/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*", "cz.cvut.fit.ruiansearch.RuianSearchApplication"]
+FROM eclipse-temurin:11-jdk-alpine as runtime
+COPY --from=build  /ruian-search/target/ruian-search-*.jar ruian-search.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java","-jar","/ruian-search.jar"]

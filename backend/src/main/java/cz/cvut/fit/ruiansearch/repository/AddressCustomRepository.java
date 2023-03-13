@@ -1,6 +1,7 @@
 package cz.cvut.fit.ruiansearch.repository;
 
 import cz.cvut.fit.ruiansearch.model.Address;
+import cz.cvut.fit.ruiansearch.model.EdisMaxQuery;
 import lombok.Cleanup;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.domain.Page;
@@ -100,6 +101,29 @@ public class AddressCustomRepository {
 
         return page.getGroupResult(field);
     }
+
+    /**
+     * This repository method returns first 10 suggestions based on fulltext search with the given string.
+     * @param searchString term to find
+     * @return 0-10 address places
+     */
+    public Page<Address> getSuggestions(String searchString) {
+        @Cleanup
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext("cz.cvut.fit.ruiansearch.config");
+        SolrTemplate solrTemplate = (SolrTemplate) context.getBean("solrTemplate");
+
+        EdisMaxQuery edismaxQuery = new EdisMaxQuery();
+        edismaxQuery.addCriteria(new SimpleStringCriteria(searchString + "*"));
+        edismaxQuery.addProjectionOnFields("K_d_ADM", "Text_adresy");
+        edismaxQuery.setDefType("edismax");
+        edismaxQuery.addQueryField("Text_adresy");
+
+        Page<Address> page = solrTemplate.query(collectionName, edismaxQuery, Address.class);
+
+        return page;
+    }
+
 
     public Page<Address> findNearbyAddresses(Point center, Double distance) {
         @Cleanup

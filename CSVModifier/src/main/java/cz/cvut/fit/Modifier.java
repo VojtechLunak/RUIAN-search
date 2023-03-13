@@ -20,6 +20,9 @@ public class Modifier {
             return;
         }
         File[] files = folder.listFiles();
+
+        log.info(files.length + " files will be modified.");
+
         for(File file : files) {
             modifyFile(file);
             file.delete();
@@ -40,7 +43,7 @@ public class Modifier {
         @Cleanup 
         BufferedReader csvReader = new BufferedReader(new FileReader(csvFile));
         String row = csvReader.readLine();
-        csvWriter.write(row + ";Identifikace;Coordinates_lat_lon\n");
+        csvWriter.write(row + ";Identifikace;Coordinates_lat_lon;Text_adresy\n");
         
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(";");
@@ -71,9 +74,23 @@ public class Modifier {
                 transformedCoordinates = transformedX + "," + transformedY;
             } catch(Exception e) {
             } finally {
+                String textAddress = "";
+                if (!data[10].isEmpty())
+                    textAddress += data[10] + " " + identification;
+                else
+                    textAddress += data[8] + " " + identification;
+
+
+                textAddress += ", " + data[15] + " ";
+                if (!data[6].isEmpty())
+                    textAddress += data[6];
+                else
+                    textAddress += data[2];
+
                 csvWriter.write(row + ";"
                         + identification + ";"
-                        + transformedCoordinates + "\n");
+                        + transformedCoordinates + ";"
+                        +textAddress + "\n");
             }
         }
     }

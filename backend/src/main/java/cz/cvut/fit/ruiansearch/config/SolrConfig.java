@@ -1,10 +1,14 @@
 package cz.cvut.fit.ruiansearch.config;
 
+import cz.cvut.fit.ruiansearch.model.EdisMaxQuery;
+import cz.cvut.fit.ruiansearch.repository.EdisMaxQueryParser;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.mapping.SimpleSolrMappingContext;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 @Configuration
@@ -23,7 +27,16 @@ public class SolrConfig {
     }
 
     @Bean
-    public SolrTemplate solrTemplate() {
-        return new SolrTemplate(solrClient());
+    public SolrTemplate solrTemplate(SolrClient client) {
+        SolrTemplate template = new SolrTemplate(client) {
+            @Override
+            public void afterPropertiesSet() {
+                super.afterPropertiesSet();
+                registerQueryParser(EdisMaxQuery.class, new EdisMaxQueryParser(new SimpleSolrMappingContext()));
+            }
+        };
+
+        template.afterPropertiesSet();
+        return template;
     }
 }

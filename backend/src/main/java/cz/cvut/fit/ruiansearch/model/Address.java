@@ -107,6 +107,10 @@ public class Address {
     @Indexed(name="Identifikace_cs")
     private String identificationForQuery;
 
+    @Indexed(value = "Text_adresy")
+    @Getter
+    private String addressText;
+
     @Indexed(value = "score", readonly = true)
     private Double score;
 }

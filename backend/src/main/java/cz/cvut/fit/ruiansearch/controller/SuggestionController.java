@@ -2,6 +2,7 @@ package cz.cvut.fit.ruiansearch.controller;
 
 import cz.cvut.fit.ruiansearch.model.Address;
 import cz.cvut.fit.ruiansearch.service.AddressService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.solr.core.query.result.GroupEntry;
 import org.springframework.data.solr.core.query.result.GroupResult;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +78,19 @@ public class SuggestionController {
 
         return suggestions;
     }
+
+    @GetMapping("/suggest")
+    public List<Address> getSuggestions(
+            @RequestParam String searchString) {
+        if (searchString.length() <= 3) {
+            return Collections.emptyList();
+        }
+
+        Page<Address> groupResult = addressService.getSuggestions(searchString);
+
+        return groupResult.toList();
+    }
+
 
     private boolean isEmptyOrNull(String input) {
         return (input == null || input == "");
