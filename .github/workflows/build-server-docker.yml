@@ -8,22 +8,21 @@ on:
   workflow_dispatch:
 env:
   IMAGE_NAME: ruian-search
-  MVN_PROFILE: production-docker
   MAIN_BRANCH_NAME: master
 jobs:
   
   build-and-publish:
   
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     
     steps:
       - uses: actions/checkout@v2
 
-      - name: Switch to backend repository
-        run: cd backend
-
       - name: Build application archive
-        run: cd backend; mvn clean package -B 
+        run: mvn clean package -B 
         
       - name: Build docker image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
