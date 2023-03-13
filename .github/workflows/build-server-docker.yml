@@ -23,7 +23,7 @@ jobs:
         run: cd backend
 
       - name: Build application archive
-        run: mvn clean package -B 
+        run: cd backend; mvn clean package -B 
         
       - name: Build docker image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
