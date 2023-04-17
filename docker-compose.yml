@@ -22,11 +22,7 @@ services:
   spring-boot:
     container_name: backend
     hostname: spring-boot
-    build:
-      context: ./backend/
-      args:
-        RUIAN_SOLR_URL: http://solr:8983/solr
-    image: backend/spring-boot
+    image: "ghcr.io/vojtechlunak/ruian-search/ruian-search:latest"
     environment:
       RUIAN_SOLR_URL: http://solr:8983/solr      
     ports:
