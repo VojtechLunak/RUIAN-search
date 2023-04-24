@@ -14,6 +14,7 @@ rm -rf -- *.zip
 
 echo "Modifying csv files..."
 mkdir -p data
+#rm /data/*
 mkdir -p temp
 for file in ./*.csv; do
 	outputFile=${file#*/}
@@ -44,11 +45,12 @@ curl -X POST -H 'Content-Type: application/json' 'http://172.17.0.1:8983/solr/ru
 
 # Index data using post tool
 echo "Indexing data"
-/opt/solr/bin/post -c ruian -params "separator=%3B" /var/solr/data/
+pwd
+/opt/solr/bin/post -c ruian -params "separator=%3B" /opt/solr-8.3.1/data/
 #docker run --rm -v "$PWD/data:/data" --network=host solr:8.3 post -c ruian -params "separator=%3B" /data/
 
 # Delete files
-rm -rf data
+#rm -rf data
 
 echo "Indexing done"
 exit 0

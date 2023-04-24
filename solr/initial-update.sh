@@ -15,9 +15,9 @@ csv_data_process() {
   fi
 }
 
-
-echo "starting initial update"
-dir="/var/solr/data"
+#find "/var/solr/data" -iname "*.csv" -quit | grep -Po '.{8}(?=_)'
+echo "Starting initial update"
+dir="/var/solr/data/"
 
 # downloads CSV files from ruian if they are not downloaded yet
 
