@@ -5,7 +5,7 @@ echo "Downloading RUIAN data"
 url=$(wget -q -O - https://nahlizenidokn.cuzk.cz/StahniAdresniMistaRUIAN.aspx | grep 'id="ctl00_bodyPlaceHolder_linkCR"' | sed -r 's/^.+href="([^"]+)".+$/\1/')
 #url="https://vdp.cuzk.cz/vymenny_format/csv/20230331_OB_530115_ADR.csv.zip"
 wget "$url"
-unzip -a -- *.zip
+unzip -o -a -- *.zip
 rm -rf -- *.zip
 
 echo "Modifying csv files..."
