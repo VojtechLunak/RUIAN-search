@@ -3,16 +3,11 @@ version: '3'
 services:
   solr:
     container_name: solr
-    image: solr:8.3
+    image: ruian-solr:latest
     ports:
       - 8983:8983
     volumes:
       - data:/var/solr
-      - ./coreConfig:/opt/solr/server/solr/configsets/ruianConfig:ro
-    command: 
-      - solr-precreate
-      - ruian
-      - /opt/solr/server/solr/configsets/ruianConfig
     networks:
       - solr
     healthcheck:
@@ -36,21 +31,6 @@ services:
       test: wget --spider -q http://localhost:8080 || exit 1
       interval: 20s
       timeout: 10s
-#  vue-app:
-#    container_name: frontend
-#    hostname: vue-app
-#    build: ./frontend/
-#    image: frontend/vue
-#    ports:
-#      - 8000:80
-#    networks:
-#      - proxy
-#    depends_on:
-#      - spring-boot
-#    healthcheck:
-#      test: wget --spider -q http://localhost:80 || exit 1
-#      interval: 20s
-#      timeout: 10s
 volumes:
   data:
 networks:
@@ -58,4 +38,3 @@ networks:
     driver: bridge
   proxy:
     driver: bridge
-    
