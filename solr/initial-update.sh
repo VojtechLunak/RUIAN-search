@@ -1,8 +1,8 @@
 #!/bin/bash
 
 csv_data_process() {
-  if find "$dir/CSV/" -name "*.csv"; then
-    data_created=$(find "$dir"/CSV/*.csv | head -1 | grep -Po '[0-9]{8}(?=_)' )
+  if find "$dir"CSV/ -name "*.csv"; then
+    data_created=$(find "$dir"CSV/*.csv | head -1 | grep -Po '[0-9]{8}(?=_)' )
     url=$(wget -q -O - https://nahlizenidokn.cuzk.cz/StahniAdresniMistaRUIAN.aspx | grep 'id="ctl00_bodyPlaceHolder_linkCR"' | sed -r 's/^.+href="([^"]+)".+$/\1/')
     csv_archive=${url##*/}
     last_update=$(echo "$csv_archive" | grep -Po '[0-9]{8}(?=_)')
