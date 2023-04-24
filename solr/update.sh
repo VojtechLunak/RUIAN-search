@@ -18,7 +18,7 @@ for file in CSV/*.csv; do
 	rm "$file"
 done
 
-rm -rf CSV
+#rm -rf CSV
 
 # Update data in csv files using java application.
 # Add 2 new columns. One containing house number and orientational number combined
