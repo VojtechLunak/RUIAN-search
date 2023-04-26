@@ -1,10 +1,9 @@
 #!/bin/bash
 
-solr-precreate ruian "/opt/solr/server/solr/configsets/ruianConfig" # maybe solr-create ?
-solr start -force
-#solr-foreground -force
+solr start
+solr create -c ruian -d "/opt/solr/server/solr/configsets/ruianConfig"
 
 /opt/ruian-solr-scripts/initial-update.sh
 
 solr stop
-solr-foreground -force
+solr-foreground

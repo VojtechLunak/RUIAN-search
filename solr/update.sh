@@ -3,10 +3,13 @@
 # Download RUIAN data
 echo "Downloading RUIAN data"
 url=$(wget -q -O - https://nahlizenidokn.cuzk.cz/StahniAdresniMistaRUIAN.aspx | grep 'id="ctl00_bodyPlaceHolder_linkCR"' | sed -r 's/^.+href="([^"]+)".+$/\1/')
-#url="https://vdp.cuzk.cz/vymenny_format/csv/20230331_OB_530115_ADR.csv.zip"
+
+tempDir="/tmp/ruian-update"
+
+mkdir -p "$tempDir"
+cd "$tempDir" || (echo "Invalid path: $tempDir" && exit 1)
 wget "$url"
 unzip -o -a -- *.zip
-rm -rf -- *.zip
 
 echo "Modifying csv files..."
 mkdir -p data
@@ -24,6 +27,7 @@ rm -rf CSV
 # Add 2 new columns. One containing house number and orientational number combined
 # and the other containing coordinates converted to wgs84.
 #docker run --rm -v "$PWD/temp:/temp" -v "$PWD/data:/data" csvmodifier
+#takes input data from /temp and saves modified csv to /data
 java -jar /opt/csv-modifier/csv-modifier.jar
 
 if [[ "$?" != 0 ]]; then
@@ -40,7 +44,9 @@ curl -X POST -H 'Content-Type: application/json' 'http://172.17.0.1:8983/solr/ru
 
 # Index data using post tool
 echo "Indexing data"
-/opt/solr/bin/post -c ruian -params "separator=%3B" /opt/solr-8.3.1/data/
+/opt/solr/bin/post -c ruian -params "separator=%3B" "$tempDir"/data/
+
+rm -rf data
 
 echo "Indexing done"
 exit 0
